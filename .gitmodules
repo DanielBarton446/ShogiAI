@@ -1,0 +1,3 @@
+[submodule "python-shogi"]
+	path = python-shogi
+	url = https://github.com/gunyarakun/python-shogi
