@@ -11,12 +11,13 @@ def count_material(board : ps.Board):
     for sq in ps.SQUARES:
         mask = ps.BB_SQUARES[sq]
         piece = str(board.piece_at(sq))
-        for piece_type in ps.PIECE_TYPES_WITHOUT_KING:
-            if mask & board.piece_bb[piece_type]:
-                if piece.isupper():
-                    value += mc.ON_BOARD_VALUES.get(piece_type)
-                elif piece.islower():
-                    value -= mc.ON_BOARD_VALUES.get(piece_type)
+        if piece is not None:
+            for piece_type in ps.PIECE_TYPES_WITHOUT_KING:
+                if mask & board.piece_bb[piece_type]:
+                    if piece.isupper():
+                        value += mc.ON_BOARD_VALUES.get(piece_type)
+                    elif piece.islower():
+                        value -= mc.ON_BOARD_VALUES.get(piece_type)
     return value
 
 
