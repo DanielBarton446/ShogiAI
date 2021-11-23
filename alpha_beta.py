@@ -29,12 +29,13 @@ def count_material(board : ps.Board):
     # expands the count of each piece.
     # E.g. c = Counter({1:2}) is 2 pawns(per index defintion)
     #  --- c.elements() evaluates to the list [1,1]
-    for e in board.pieces_in_hand[ps.BLACK].elements():
-        piece_type = ps.PIECE_TYPES_WITH_NONE[e] 
+    for piece_index in board.pieces_in_hand[ps.BLACK].elements():
+        # piece_index is based on PIECE_TYPES_WITH_NONE.
+        piece_type = ps.PIECE_TYPES_WITH_NONE[piece_index] 
         value += mc.IN_HAND_VALUES.get(piece_type)
 
-    for e in board.pieces_in_hand[ps.WHITE]:
-        piece_type = ps.PIECE_TYPES_WITH_NONE[e] 
+    for piece_index in board.pieces_in_hand[ps.WHITE]:
+        piece_type = ps.PIECE_TYPES_WITH_NONE[piece_index] 
         value -= mc.IN_HAND_VALUES.get(piece_type)
     
     return value
