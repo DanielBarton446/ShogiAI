@@ -7,15 +7,7 @@ mobility_weight = 3.0
 def main():
     pass
 
-# Traditionally, player 1 is BLACK and player 2 is WHITE
-def legal_moves_for_current_player(board : ps.Board):
-    legal_moves = []
-    for mv in board.generate_legal_moves():
-        src = mv.from_square
-        piece = board.piece_at(src)
-        if piece.color == board.turn:
-            legal_moves.append(mv)
-    return legal_moves
+
 
 def count_mobility(board : ps.Board):
     value = 0.0
