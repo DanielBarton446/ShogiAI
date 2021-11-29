@@ -7,6 +7,13 @@ mobility_weight = 3.0
 def main():
     pass
 
+def checkmate_value(board : ps.Board):
+    if board.is_checkmate():
+        if board.turn == ps.BLACK:
+            return float('-inf')
+        else:
+            return float('inf')
+    return 0.0
 
 
 def count_mobility(board : ps.Board):
@@ -64,6 +71,7 @@ def evaluator(board : ps.Board):
     evaluation = 0
     evaluation += count_material(board)
     evaluation += count_mobility(board)
+    evaluation += checkmate_value(board)
     return round(evaluation, sig_figs)
 
 if __name__ == "__main__":
