@@ -1,70 +1,46 @@
 import python_shogi.shogi as ps
+import alpha_beta as ab
 import material_consts as mc
+import random
 
-sig_figs = 3
-mobility_weight = 3.0
+def alpha_beta(board : ps.Board,depth, maximizingplayer, alpha, beta):
+    if (depth == 0 or board.is_game_over()):
+        return [None,ab.evaluator(board)];
+    elif(maximizingplayer):
+        max_value = float('-inf');
+        best_move = "";
+        moves = board.generate_legal_moves();
+        for move in moves:
+            current_move = move.usi();
+            board.push_usi(current_move);
+            eval = alpha_beta(board, depth-1, False,alpha,beta);
+            if (eval[1] > max_value):
+                best_move = current_move;
+                max_value = eval[1];            
+            board.pop();
+            alpha = max(alpha,eval[1]);
+            if beta <= alpha:
+                break;
 
-def main():
-    pass
-
-
-
-def count_mobility(board : ps.Board):
-    value = 0.0
-    count = 0.0
-    player_moves = board.generate_legal_moves()
-    for _ in player_moves:
-        count += 1.0
-        if board.turn == ps.BLACK:
-            value += 1.0
-        else: 
-            value -= 1.0
-
-    board.turn = not board.turn # change turn to view other player's legal moves
-    opponent_moves = board.generate_legal_moves()
-    for _ in opponent_moves:
-        count += 1.0
-        if board.turn == ps.BLACK:
-            value += 1.0
-        else: 
-            value -= 1.0
-    board.turn = not board.turn # reset turn to original
-    
-    value = mobility_weight * (value / count) # 0 if same number of moves
-    return round(value, sig_figs) # Rounds due to floating point errors
-
-
-def count_material(board : ps.Board):
-    value = 0
-    for sq in ps.SQUARES:
-        piece = board.piece_at(sq)
-        if piece is not None and piece.piece_type is not ps.KING:
-            if piece.color == ps.BLACK:
-                value += mc.ON_BOARD_VALUES.get(piece.piece_type)
-            else:
-                value -= mc.ON_BOARD_VALUES.get(piece.piece_type)
-    
-    # board.pieces_in_hand gives a counter, Counter.elements() 
-    # expands the count of each piece.
-    # E.g. c = Counter({1:2}) is 2 pawns(per index defintion)
-    #  --- c.elements() evaluates to the list [1,1]
-    for piece_index in board.pieces_in_hand[ps.BLACK].elements():
-        # piece_index is based on PIECE_TYPES_WITH_NONE.
-        piece_type = ps.PIECE_TYPES_WITH_NONE[piece_index] 
-        value += mc.IN_HAND_VALUES.get(piece_type)
-
-    for piece_index in board.pieces_in_hand[ps.WHITE]:
-        piece_type = ps.PIECE_TYPES_WITH_NONE[piece_index] 
-        value -= mc.IN_HAND_VALUES.get(piece_type)
-    
-    return round(value, sig_figs) # Rounds due to floating point errors
+        return [best_move, max_value];
+    else:
+        min_value = float('inf');
+        best_move = "";
+        moves = board.generate_legal_moves();
+        for move in moves:
+            current_move = move.usi();
+            board.push_usi(current_move);
+            eval = alpha_beta(board, depth-1,True,alpha,beta);
+            if (eval[1] < min_value):
+                min_value = eval[1];
+                best_move = current_move;
+            board.pop();
+            beta = min(beta,eval[1])
+            if beta <= alpha:
+                break;
+        return [best_move,min_value];
 
 
-def evaluator(board : ps.Board):
-    evaluation = 0
-    evaluation += count_material(board)
-    evaluation += count_mobility(board)
-    return round(evaluation, sig_figs)
 
-if __name__ == "__main__":
-    main()
+board = ps.Board();
+print(alpha_beta(board,3,True, float('-inf'), float('inf')));
