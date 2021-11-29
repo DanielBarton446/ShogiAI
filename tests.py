@@ -2,11 +2,30 @@ import unittest
 import python_shogi.shogi as ps
 import evaluator as evlt
 import material_consts as mc
+import alpha_beta as ab
 import random
 
 # Note: methods you want to be tested MUST start with test
 # To run tests, in console type 
 #    python3 -m unittest <testFile>
+
+class TestAlphaBeta(unittest.TestCase):
+    def setUp(self):
+        self.board = ps.Board()
+
+    def test_finds_checkmate_in_one(self):
+        self.board.push_usi('7g7f')
+        self.board.push_usi('3c3d')
+        self.board.push_usi('8h2b+')
+        self.board.push_usi('4a5b')
+        self.board.push_usi('B*4b')
+        self.board.push_usi('5a4a')
+        move,_ = ab.alpha_beta(self.board, 3, True, \
+                               float('-inf'), float('inf'))
+        self.assertEqual('2b3a', str(move))
+        
+ 
+    
 
 class TestEvaluator(unittest.TestCase):
 
@@ -26,7 +45,6 @@ class TestEvaluator(unittest.TestCase):
         self.board.push_usi('B*4b')
         self.board.push_usi('5a4a')
         self.board.push_usi('2b3a')
-        print("checkmate: " + str(self.board.is_checkmate()))
         self.assertEqual(round(float('inf'), 3), evlt.evaluator(self.board))
 
 ######################### SUBROUTINE TESTING ###################################
