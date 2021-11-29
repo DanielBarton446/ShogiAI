@@ -1,11 +1,11 @@
 import python_shogi.shogi as ps
-import alpha_beta as ab
+import evaluator as evlt
 import material_consts as mc
 import random
 
 def alpha_beta(board : ps.Board,depth, maximizingplayer, alpha, beta):
     if (depth == 0 or board.is_game_over()):
-        return [None,ab.evaluator(board)];
+        return [None,evlt.evaluator(board)];
     elif(maximizingplayer):
         max_value = float('-inf');
         best_move = "";
