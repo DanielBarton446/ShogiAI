@@ -3,7 +3,6 @@ import python_shogi.shogi as ps
 import evaluator as evlt
 import material_consts as mc
 import alpha_beta as ab
-import random
 
 # Note: methods you want to be tested MUST start with test
 # To run tests, in console type 
@@ -45,7 +44,7 @@ class TestEvaluator(unittest.TestCase):
         self.board.push_usi('B*4b')
         self.board.push_usi('5a4a')
         self.board.push_usi('2b3a')
-        self.assertEqual(round(float('inf'), 3), evlt.evaluator(self.board))
+        self.assertEqual(float('inf'), evlt.evaluator(self.board))
 
 ######################### SUBROUTINE TESTING ###################################
 

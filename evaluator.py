@@ -4,9 +4,6 @@ import material_consts as mc
 sig_figs = 3
 mobility_weight = 3.0
 
-def main():
-    pass
-
 def checkmate_value(board : ps.Board):
     if board.is_checkmate():
         if board.turn == ps.BLACK:
@@ -73,6 +70,3 @@ def evaluator(board : ps.Board):
     evaluation += count_mobility(board)
     evaluation += checkmate_value(board)
     return round(evaluation, sig_figs)
-
-if __name__ == "__main__":
-    main()
