@@ -29,6 +29,14 @@ class TestGeneratorFunctions(unittest.TestCase):
             move = str(mv)
         self.assertEqual("N*8c", move)
 
+    def test_legal_moves_in_check(self):
+        self.board = ps.Board("3k5/9/9/9/9/3l5/2P1P4/2LKL4/2S1S4 b N 1")
+        move = None
+        # Only legal move is N*6g
+        for mv in gens.generate_qualifying_moves(self.board):
+            move = mv
+        self.assertEqual("N*6g", str(move))
+
 
 class TestAlphaBeta(unittest.TestCase):
     def setUp(self):
@@ -41,9 +49,16 @@ class TestAlphaBeta(unittest.TestCase):
         self.board.push_usi('4a5b')
         self.board.push_usi('B*4b')
         self.board.push_usi('5a4a')
-        move,_ = ab.alpha_beta(self.board, 3, True, \
+        move,_ = ab.my_alpha_beta(self.board, 3, True, \
                                float('-inf'), float('inf'))
         self.assertEqual('2b3a', str(move))
+
+    def test_finds_checkmate_in_three(self):
+        self.board = ps.Board("ln1g4l/1r1sk4/2p1p1+Pp1/p7p/4B1p2/2PP5/P3PP2P/2+pS2S2/LN2KG2L b BGN2Prgsn2p 1")
+        move,val = ab.my_alpha_beta(self.board, 3, True, \
+                               float('-inf'), float('inf'))
+        self.assertEqual(float('inf'), val)
+        print(move)
         
  
     

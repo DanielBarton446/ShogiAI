@@ -1,5 +1,19 @@
 import python_shogi.shogi as ps
+from itertools import chain
 
+def generate_legal_attacking_moves(board : ps.Board,pawns=True, lances=True, 
+            knights=True, silvers=True, golds=True,
+            bishops=True, rooks=True,
+            king=True,
+            prom_pawns=True, prom_lances=True, prom_knights=True,
+            prom_silvers=True, prom_bishops=True, prom_rooks=True,
+            pawns_drop=True, lances_drop=True, knights_drop=True, 
+            silvers_drop=True, golds_drop=True,
+            bishops_drop=True, rooks_drop=True):
+    return (move for move in generate_attacking_moves(board,
+                pawns, lances, knights, silvers, golds, bishops, rooks, king,
+                pawns_drop, lances_drop, knights_drop, silvers_drop, golds_drop, bishops_drop, rooks_drop
+            ) if not board.is_suicide_or_check_by_dropping_pawn(move))
 
 def generate_attacking_moves(board : ps.Board,pawns=True, lances=True, 
             knights=True, silvers=True, golds=True,
@@ -75,9 +89,19 @@ def generate_attacking_moves(board : ps.Board,pawns=True, lances=True,
         drop_sq = ps.bit_scan(moves, drop_sq + 1)
 
 
+def generate_legal_moves_in_check(board : ps.Board):
+    if (board.is_check()):
+        yield from board.generate_legal_moves()
+    else: #stop iteration without yielding, but maintain as generator.
+        return
+        yield
+
+
 def generate_qualifying_moves(board : ps.Board):
     # TODO: Chain multiple gennerators
-    return generate_attacking_moves(board)
+    generator = chain(generate_legal_attacking_moves(board),\
+                      generate_legal_moves_in_check(board))
+    return generator
 
 
 
