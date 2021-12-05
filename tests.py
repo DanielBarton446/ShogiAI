@@ -3,10 +3,32 @@ import python_shogi.shogi as ps
 import evaluator as evlt
 import material_consts as mc
 import alpha_beta as ab
+import generators as gens
 
 # Note: methods you want to be tested MUST start with test
 # To run tests, in console type 
 #    python3 -m unittest <testFile>
+
+class TestGeneratorFunctions(unittest.TestCase):
+    def setUp(self):
+        self.board = ps.Board()
+
+    def test_one_legal(self):
+        self.board = ps.Board("lnsgkgsnl/1r5b1/ppppppppp/7P1/9/9/PPPPPPP1P/1B5R1/LNSGKGSNL b - 1")
+        move = None
+        # Only one move in the generator
+        for mv in gens.generate_attacking_moves(self.board):
+            move = str(mv)
+        self.assertEqual("2d2c", move)
+
+    def test_from_hand(self):
+        self.board = ps.Board("k8/9/9/9/9/9/9/9/K8 b N 1")
+        move = None
+        # There is only one move in the generator
+        for mv in gens.generate_attacking_moves(self.board):
+            move = str(mv)
+        self.assertEqual("N*8c", move)
+
 
 class TestAlphaBeta(unittest.TestCase):
     def setUp(self):
