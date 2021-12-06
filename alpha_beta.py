@@ -89,16 +89,13 @@ def finale_alpha_beta(board : ps.Board,depth, maximizingplayer, alpha, beta, gen
         moves = generator(board)
         length = sum(1 for _ in moves)
         if (length == 0):
-            print("the evaluator function provided did not provide any moves")
             moves = board.generate_legal_moves()
         else:
-            print("the evaluator function provided did provide some moves")
-            print()
             moves = generator(board)
         for move in moves:
             current_move = move.usi()
             board.push_usi(current_move)
-            evl = alpha_beta(board, depth-1, False,alpha,beta)
+            evl = finale_alpha_beta(board, depth-1, False,alpha,beta, generator,evaluator)
             if (evl[1] > max_value):
                 best_move = current_move
                 max_value = evl[1]            
@@ -115,7 +112,7 @@ def finale_alpha_beta(board : ps.Board,depth, maximizingplayer, alpha, beta, gen
         for move in moves:
             current_move = move.usi()
             board.push_usi(current_move)
-            evl = alpha_beta(board, depth-1,True,alpha,beta)
+            evl = finale_alpha_beta(board, depth-1,True,alpha,beta, generator, evaluator)
             if (evl[1] < min_value):
                 min_value = evl[1]
                 best_move = current_move
