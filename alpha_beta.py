@@ -82,20 +82,21 @@ def my_alpha_beta(board : ps.Board,depth, maximizingplayer, alpha, beta):
 
 def finale_alpha_beta(board : ps.Board,depth, maximizingplayer, alpha, beta, generator, evaluator):
     if (depth == 0 or board.is_game_over()):
-        return [None, evaluator(board)]
+        return [None,evaluator(board)]
     elif(maximizingplayer):
         max_value = float('-inf')
         best_move = ""
         moves = generator(board)
-        length = sum(1 for _ in moves)
-        if (length == 0):
-            moves = board.generate_legal_moves()
-        else:
-            moves = generator(board)
+
+        # try:
+            # next(generator(board))
+        # except StopIteration:
+            # generator = board.generate_legal_moves
+
         for move in moves:
             current_move = move.usi()
             board.push_usi(current_move)
-            evl = finale_alpha_beta(board, depth-1, False,alpha,beta, generator,evaluator)
+            evl = finale_alpha_beta(board, depth-1, False,alpha,beta, generator, evaluator)
             if (evl[1] > max_value):
                 best_move = current_move
                 max_value = evl[1]            
@@ -108,7 +109,7 @@ def finale_alpha_beta(board : ps.Board,depth, maximizingplayer, alpha, beta, gen
     else:
         min_value = float('inf')
         best_move = ""
-        moves = board.generate_legal_moves()
+        moves = generator(board)
         for move in moves:
             current_move = move.usi()
             board.push_usi(current_move)

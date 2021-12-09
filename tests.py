@@ -13,6 +13,14 @@ class TestGeneratorFunctions(unittest.TestCase):
     def setUp(self):
         self.board = ps.Board()
 
+    def test_generate_tsume_moves_no_moves(self):
+        gen = gens.generate_tsume_moves(self.board)
+        try:
+            next(gen)
+            self.assertTrue(False)
+        except:
+            self.assertTrue(True)
+
     def test_one_legal(self):
         self.board = ps.Board("lnsgkgsnl/1r5b1/ppppppppp/7P1/9/9/PPPPPPP1P/1B5R1/LNSGKGSNL b - 1")
         move = None
@@ -21,7 +29,7 @@ class TestGeneratorFunctions(unittest.TestCase):
             move = str(mv)
         self.assertEqual("2d2c", move)
 
-    def test_from_hand(self):
+    def test_attacking_from_hand(self):
         self.board = ps.Board("k8/9/9/9/9/9/9/9/K8 b N 1")
         move = None
         # There is only one move in the generator
@@ -49,19 +57,26 @@ class TestAlphaBeta(unittest.TestCase):
         self.board.push_usi('4a5b')
         self.board.push_usi('B*4b')
         self.board.push_usi('5a4a')
-        move,_ = ab.my_alpha_beta(self.board, 3, True, \
-                               float('-inf'), float('inf'))
+        move,val = ab.finale_alpha_beta(self.board, 3, True, \
+                               float('-inf'), float('inf'),
+                               gens.generate_tsume_moves, 
+                               evlt.evaluator)
+        self.assertEqual(float('inf'), val)
         self.assertEqual('2b3a', str(move))
+    
+    def test_gen_function(self):
+        self.board = ps.Board("ln1g4l/1r1sk4/2p1p1+Pp1/p7p/4B1p2/2PP5/P3PP2P/2+pS2S2/LN2KG2L b BGN2Prgsn2p 1")
+        # for mv in gens.generate_tsume_moves(self.board):
+            # print(mv)
 
     def test_finds_checkmate_in_three(self):
         self.board = ps.Board("ln1g4l/1r1sk4/2p1p1+Pp1/p7p/4B1p2/2PP5/P3PP2P/2+pS2S2/LN2KG2L b BGN2Prgsn2p 1")
-        move,val = ab.my_alpha_beta(self.board, 3, True, \
-                               float('-inf'), float('inf'))
+        move,val = ab.finale_alpha_beta(self.board, 3, True, \
+                               float('-inf'), float('inf'),
+                               gens.generate_tsume_moves, 
+                               evlt.evaluator)
         self.assertEqual(float('inf'), val)
-        print(move)
-        
- 
-    
+
 
 class TestEvaluator(unittest.TestCase):
 
