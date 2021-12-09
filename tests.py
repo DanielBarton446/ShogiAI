@@ -77,6 +77,30 @@ class TestAlphaBeta(unittest.TestCase):
                                evlt.evaluator)
         self.assertEqual(float('inf'), val)
 
+    def test_finds_checkmate_in_three_1(self):
+        self.board = ps.Board("l2+R3nl/3ngsgb1/4pp1p1/p1Pk2PPp/6+b2/PPpPGP2P/2GS4N/1K7/L3r3L b N3P2sp 1")
+        move,val = ab.finale_alpha_beta(self.board, 3, True, \
+                               float('-inf'), float('inf'),
+                               gens.generate_tsume_moves, 
+                               evlt.evaluator)
+        self.assertEqual(float('inf'), val)
+
+    def test_finds_checkmate_in_five(self):
+        self.board = ps.Board("6snl/2+P1k1g2/p1+B1pp1p1/3pl1p1p/1p3S1P1/3+b2Pl1/PP3PK1P/7R1/5+s1NL b 2G2Prg2snp 1")
+        move,val = ab.finale_alpha_beta(self.board, 5, True, \
+                               float('-inf'), float('inf'),
+                               gens.generate_tsume_moves, 
+                               evlt.evaluator)
+        self.assertEqual(float('inf'), val)
+
+    def test_finds_checkmate_in_seven(self):
+        self.board = ps.Board("6snl/2+P1k1g2/p1+Bppp1p1/4l1p1p/1p3S1P1/3+b2Pl1/PP3PK1P/7R1/5+n1NL b 2GN3Prg2sp 1")
+        move,val = ab.finale_alpha_beta(self.board, 5, True, \
+                               float('-inf'), float('inf'),
+                               gens.generate_tsume_moves, 
+                               evlt.evaluator)
+        self.assertEqual(float('inf'), val)
+
 
 class TestEvaluator(unittest.TestCase):
 
