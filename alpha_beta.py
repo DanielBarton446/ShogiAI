@@ -111,6 +111,13 @@ def finale_alpha_beta(board : ps.Board,depth, maximizingplayer, alpha, beta, gen
         min_value = float('inf')
         best_move = ""
         moves = generator(board)
+
+        try:
+            next(generator(board))
+            moves = generator(board)
+        except StopIteration:
+            moves = board.generate_legal_moves(board)
+
         for move in moves:
             current_move = move.usi()
             board.push_usi(current_move)
