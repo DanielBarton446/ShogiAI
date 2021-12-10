@@ -191,10 +191,12 @@ def generate_tsume_moves(board : ps.Board):
                       generate_legal_moves_in_check(board))
     return generator
 
+
 def generate_qualifying_moves(board : ps.Board):
-    # TODO: Chain multiple gennerators
     attacking_gen = generate_attacking_moves
-    generator = chain(generate_legal_moves(board, attacking_gen),\
+    tsume_gen = generate_tsume_moves
+    generator = chain(tsume_gen(board),
+                      generate_legal_moves(board, attacking_gen),
                       generate_legal_moves_in_check(board))
     return generator
 
