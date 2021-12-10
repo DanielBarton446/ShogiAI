@@ -29,7 +29,7 @@ def AI_game(board: ps.Board,player1,depth = 3, record_game = False):
             print()
             AI_game(board,False)
     if record_game:
-        file_name = 'game'
+        file_name = 'savegame'
         extension = '.txt'
         num = 0
         while(True):
@@ -46,7 +46,7 @@ def AI_game(board: ps.Board,player1,depth = 3, record_game = False):
 
 def main():
     board = ps.Board()
-    AI_game(board,True,4,True)
+    AI_game(board,True,3,True)
 
 if __name__ == "__main__":
     main()
