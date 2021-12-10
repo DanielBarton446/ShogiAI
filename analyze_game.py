@@ -26,15 +26,21 @@ class Analyze:
             print(self.board)
             print("Input: (N)ext\n" + 
                   "       (B)ack\n" +
-                  "       (Q)uit\n" )
+                  "       (Q)uit\n" +
+                  "       (P)rint sfen\n" )
             inpt = input("Enter input: ")
             inpt = inpt.lower()
             if inpt == "n":
-                move = moves.popleft()
-                self.board.push_usi(move)
+                try:
+                    move = moves.popleft()
+                    self.board.push_usi(move)
+                except IndexError:
+                    print("End of the Move queue")
             elif inpt == "b":
                 move = self.board.pop().usi()
                 moves.appendleft(move)
+            elif inpt == "p":
+                print(self.board.sfen())
             elif inpt == "q":
                 quit = True
             else:
