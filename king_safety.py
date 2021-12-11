@@ -5,16 +5,46 @@ import material_consts as mc
 import alpha_beta as ab
 import generators as gens
 import math
+from python_shogi.shogi import Consts
 
+levels  = {
+    1: (8,0),
+    2: (17,9),
+    3: (26,18),
+    4: (35,27),
+    5: (44,36),
+    6: (53,45),
+    7: (62,54),
+    8: (71,63),
+    9: (80,72)
+}
+
+def find_level(num):
+    low_range = 0
+    high_range = 8
+    for i in range(1,10):
+        if (num >= low_range and num <= high_range):
+            return i
+        else:
+            low_range += 9
+            high_range += 9
+            
+def on_level(num,level):
+    if (find_level(num) == level):
+        return True
+    else:
+        return False
+
+    
 def find_adjacent(piece_position,r):
     adjacent = []
     level_zero = []
     for i in range(1, r + 1):
-        right = piece_position + (i * 1)
-        left = piece_position - (i * 1)
-        if (right >= 0 and right <= 80):
+        right = piece_position - (i * 1)
+        left = piece_position + (i * 1)
+        if (on_level(right,find_level(piece_position))):
             level_zero.append(right)
-        if (left >= 0 and left <= 80):
+        if (on_level(left,find_level(piece_position))):
             level_zero.append(left)
     level_zero.append(piece_position)
     adjacent += level_zero
@@ -45,14 +75,6 @@ def letter_convert(st):
     value = letter + number
     return value
 
-def number_convert(num):
-    my_dict = {
-    0: "a", 1: "b", 2: "c", 3: "d", 4: "e", 5: "f",6:"g",7:"h",8: "i"
-    }
-    letter = my_dict[math.floor(num / 9)] 
-    number = abs((num % 9) - 9)
-    return str(number) + letter
-    
 
 def king_zone(board: ps.Board,generator,piece, r):
     attackingPiecesCount = 0 
@@ -73,55 +95,55 @@ def king_zone(board: ps.Board,generator,piece, r):
     for attacker in individual_attackers:
         piece_type = str(board.piece_at(attacker))
         if (piece_type== "P"):
-            type_value = 1.00
+            type_value = mc.ON_BOARD_VALUES[ps.PAWN]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "S"):
-            type_value = 6.40
+            type_value = mc.ON_BOARD_VALUES[ps.SILVER]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "B"):
-            type_value = 8.90
+            type_value = mc.ON_BOARD_VALUES[ps.BISHOP]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "L"):
-            type_value = 4.30
+            type_value = mc.ON_BOARD_VALUES[ps.LANCE]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "G"):
-            type_value = 6.90
+            type_value = mc.ON_BOARD_VALUES[ps.GOLD]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "R"):
-            type_value = 10.40
+            type_value = mc.ON_BOARD_VALUES[ps.ROOK]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "N"):
-            type_value = 4.50
+            type_value = mc.ON_BOARD_VALUES[ps.KNIGHT]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "P+"):
-            type_value = 4.20
+            type_value = mc.ON_BOARD_VALUES[ps.PROM_PAWN]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "N+"):
-            type_value = 6.40
+            type_value = mc.ON_BOARD_VALUES[ps.PROM_KNIGHT]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "S+"):
-            type_value = 6.70
+            type_value = mc.ON_BOARD_VALUES[ps.PROM_SILVER]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "B+"):
-            type_value = 11.50
+            type_value = mc.ON_BOARD_VALUES[ps.PROM_BISHOP]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "L+"):
-            type_value = 6.30
+            type_value = mc.ON_BOARD_VALUES[ps.PROM_LANCE]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
         if (piece_type== "R+"):
-            type_value = 13.00
+            type_value = mc.ON_BOARD_VALUES[ps.PROM_ROOK]
             over_all_value = type_value * individual_attackers[attacker]
             valueOfAttacks += over_all_value
     print(attackingPiecesCount)
@@ -130,6 +152,11 @@ def king_zone(board: ps.Board,generator,piece, r):
     }
     return valueOfAttacks * attackWeight[attackingPiecesCount] / 100
 
-board = ps.Board("lnsgkgsnl/1r5b1/pp1pppppp/2p6/6N2/2L6/PPPPPPPPP/1B5R1/LNSGKGS2 b - 1")
-print(king_zone(board,gens.generate_attacking_moves,4,2))
 
+board = ps.Board("9/9/9/9/9/9/9/9/4K4 b - 1")
+adj = find_adjacent(76,9)
+adj.sort()
+print(adj)
+print()
+expected_square_indexes = [x for x in range(81)]
+print(expected_square_indexes)

@@ -76,15 +76,18 @@ class TestKingSafety(unittest.TestCase):
                                    45,46,47,48,49,50,51,52,53,
                                    54,55,56,57,58,59,60,61,62,
                                    63,64,65,66,67,68,69,70,71,
-                                   72,73,74,75,   77,78,79,80]
+                                   72,73,74,75,77,78,79,80]
                                  
-        adjacent_tiles = ks.find_adjacent(self.board.king_squares[ps.BLACK], 2)
+        adjacent_tiles = ks.find_adjacent(self.board.king_squares[ps.BLACK], 4)
         print("Size of Radius 4 tiles: " + str(len(adjacent_tiles)))
         self.assertCountEqual(expected_square_indexes, adjacent_tiles)
 
     def test_bottom_side_center_absurd_radius(self):
         self.board = ps.Board("9/9/9/9/9/9/9/9/4K4 b - 1")
-        expected_square_indexes = [x for x in range(81)]
+        expected_square_indexes = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
+                                   26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,
+                                   51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,77,
+                                   78,79,80]
                                  
         adjacent_tiles = ks.find_adjacent(self.board.king_squares[ps.BLACK], 9)
         print("Size of Radius 9 tiles: " + str(len(adjacent_tiles)))
