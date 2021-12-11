@@ -3,7 +3,7 @@ import king_safety as ks
 import python_shogi.shogi as ps
 
 
-class TestKingSafety(unittest.TestCase):
+class TestAdjacentSquares(unittest.TestCase):
     def setUp(self):
         self.board = ps.Board()
 
@@ -79,7 +79,6 @@ class TestKingSafety(unittest.TestCase):
                                    72,73,74,75,77,78,79,80]
                                  
         adjacent_tiles = ks.find_adjacent(self.board.king_squares[ps.BLACK], 4)
-        print("Size of Radius 4 tiles: " + str(len(adjacent_tiles)))
         self.assertCountEqual(expected_square_indexes, adjacent_tiles)
 
     def test_bottom_side_center_absurd_radius(self):
@@ -90,7 +89,6 @@ class TestKingSafety(unittest.TestCase):
                                    78,79,80]
                                  
         adjacent_tiles = ks.find_adjacent(self.board.king_squares[ps.BLACK], 9)
-        print("Size of Radius 9 tiles: " + str(len(adjacent_tiles)))
         self.assertCountEqual(expected_square_indexes, adjacent_tiles)
 
 
@@ -129,8 +127,26 @@ class TestKingSafety(unittest.TestCase):
 
 
 
+class TestKingSafety(unittest.TestCase):
+    def setUp(self):
+        self.board = ps.Board()
 
+    @unittest.skip("no reason")
+    def test_my_king_safety(self):
+        ks.king_safety(self.board, 1)
+        print(ks.king_safety(self.board, 2))
 
+    @unittest.skip("no reason")
+    def test_my_king_safety_from_attacks(self):
+        self.board = ps.Board("9/9/9/4k4/9/9/4S1N2/9/5L3 b - 1")
+        print(ks.king_safety(self.board, 2))
 
+    @unittest.skip("no reason")
+    def test_my_king_safety_with_alot(self):
+        self.board = ps.Board("9/9/9/4k4/9/4S4/6N2/3R5/5L3 b - 1")
+        print(ks.king_safety(self.board, 2))
 
-
+    @unittest.skip("no reason")
+    def test_my_king_safety_attacks_king(self):
+        self.board = ps.Board("9/9/9/4k4/9/5N3/9/9/9 b - 1")
+        print(ks.king_safety(self.board, 2))

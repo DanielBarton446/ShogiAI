@@ -1,11 +1,7 @@
-import unittest
 import python_shogi.shogi as ps
-import evaluator as evlt
-import material_consts as mc
-import alpha_beta as ab
-import generators as gens
-import math
 from python_shogi.shogi import Consts
+import evaluator as evlt
+import math
 
 levels  = {
     1: (8,0),
@@ -75,88 +71,44 @@ def letter_convert(st):
     value = letter + number
     return value
 
-
-def king_zone(board: ps.Board,generator,piece, r):
-    attackingPiecesCount = 0 
+def king_safety(board : ps.Board, radius):
     valueOfAttacks = 0
-    moves = generator(board)
-    adjacent = find_adjacent(piece,r)
-    individual_attackers = {}
-    for move in moves:
-        start = str(move)[:2]
-        end = str(move)[2:]
-        if (letter_convert(end) in adjacent):
-            num_start = letter_convert(start)
-            if (num_start in individual_attackers):
-                individual_attackers[num_start] += 1
-            else:
-                individual_attackers[num_start] = 1
-    attackingPiecesCount = len(individual_attackers)
-    for attacker in individual_attackers:
-        piece_type = str(board.piece_at(attacker))
-        if (piece_type== "P"):
-            type_value = mc.ON_BOARD_VALUES[ps.PAWN]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "S"):
-            type_value = mc.ON_BOARD_VALUES[ps.SILVER]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "B"):
-            type_value = mc.ON_BOARD_VALUES[ps.BISHOP]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "L"):
-            type_value = mc.ON_BOARD_VALUES[ps.LANCE]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "G"):
-            type_value = mc.ON_BOARD_VALUES[ps.GOLD]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "R"):
-            type_value = mc.ON_BOARD_VALUES[ps.ROOK]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "N"):
-            type_value = mc.ON_BOARD_VALUES[ps.KNIGHT]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "P+"):
-            type_value = mc.ON_BOARD_VALUES[ps.PROM_PAWN]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "N+"):
-            type_value = mc.ON_BOARD_VALUES[ps.PROM_KNIGHT]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "S+"):
-            type_value = mc.ON_BOARD_VALUES[ps.PROM_SILVER]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "B+"):
-            type_value = mc.ON_BOARD_VALUES[ps.PROM_BISHOP]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "L+"):
-            type_value = mc.ON_BOARD_VALUES[ps.PROM_LANCE]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-        if (piece_type== "R+"):
-            type_value = mc.ON_BOARD_VALUES[ps.PROM_ROOK]
-            over_all_value = type_value * individual_attackers[attacker]
-            valueOfAttacks += over_all_value
-    print(attackingPiecesCount)
-    print(valueOfAttacks)
-    attackWeight = {1:0,2:50,3:75,4:88,5:94,6:97,7:99,
-    }
-    return valueOfAttacks * attackWeight[attackingPiecesCount] / 100
 
+    attacking_moves = board.legal_moves
 
-board = ps.Board("9/9/9/9/9/9/9/9/4K4 b - 1")
-adj = find_adjacent(76,9)
-adj.sort()
-print(adj)
-print()
-expected_square_indexes = [x for x in range(81)]
-print(expected_square_indexes)
+    adjacent_squares = find_adjacent(board.king_squares[not board.turn], radius)
+
+    attacking_from_squares = set()
+    
+    attack_value = {
+        Consts.PAWN  : 5, Consts.LANCE: 20, Consts.KNIGHT: 20,
+        Consts.SILVER: 40, Consts.GOLD : 40, 
+        Consts.BISHOP: 80, Consts.ROOK : 80,
+
+        # Promoted Pieces
+        # Note -- promoted gold does not exist.
+
+        Consts.PROM_PAWN  : 40, Consts.PROM_LANCE: 40, 
+        Consts.PROM_KNIGHT: 40, 
+        Consts.PROM_SILVER: 40, 
+        Consts.PROM_BISHOP: 90, Consts.PROM_ROOK: 90
+        }
+
+    attackWeight = {
+                    0 : 0 , 1 : 0 , 2 : 50, 3 : 75, 
+                    4 : 88, 5 : 94, 6 : 97, 7 : 99,
+                   }
+
+    for mv in attacking_moves:
+        # For some reason, mv.from_square can be None.
+        if mv.from_square is not None and \
+           mv.to_square in adjacent_squares and \
+           board.piece_at(mv.from_square).piece_type is not ps.KING:
+            # for each to_square attacked, we add to our valueOfAttacks
+            valueOfAttacks += attack_value[board.piece_at(mv.from_square).piece_type]
+            attacking_from_squares.add(mv.from_square)
+
+    if len(attacking_from_squares) > 7:
+        return round(valueOfAttacks / 100 * attackWeight[7] / 100, evlt.sig_figs)
+    else:
+        return round(valueOfAttacks / 100 * attackWeight[len(attacking_from_squares)] / 100, evlt.sig_figs)

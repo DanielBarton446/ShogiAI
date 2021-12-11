@@ -1,5 +1,6 @@
 import python_shogi.shogi as ps
 import material_consts as mc
+import king_safety as ks
 
 sig_figs = 3
 mobility_weight = 3.0
@@ -69,4 +70,6 @@ def evaluator(board : ps.Board):
     evaluation += count_material(board)
     evaluation += count_mobility(board)
     evaluation += checkmate_value(board)
+    radius = 1 # arbitrary radius
+    evaluation += ks.king_safety(board, radius)
     return round(evaluation, sig_figs)
