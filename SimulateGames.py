@@ -4,16 +4,18 @@ import generators as gens
 import python_shogi.shogi as ps
 
 def simulate_games():
-    game_count = 100
+    game_count = 99
     # Adjust these as needed
     board = ps.Board()
-    agent1 = a.AlphaBetaAgent(gens.generate_qualifying_moves, 3, evaluator_flags=[1,1,1,0])
-    agent2 = a.Agent(board.generate_legal_moves)
-
+    eval_flags_black = [1,1,1,1]
+    eval_flags_white = [1,1,1,1]
+    agent1 = a.AlphaBetaAgent(gens.generate_qualifying_moves, 3, eval_flags_black)
+    agent2 = a.AlphaBetaAgent(gens.generate_attacking_moves, 3, eval_flags_white)
     for _ in range(game_count):
         # record game stats by default. 
         board = ps.Board()
         gm.play_game(board, agent1, agent2)
+    
 
 def process_stats():
     try:

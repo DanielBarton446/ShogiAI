@@ -55,12 +55,14 @@ def count_material(board : ps.Board):
     #  --- c.elements() evaluates to the list [1,1]
     for piece_index in board.pieces_in_hand[ps.BLACK].elements():
         # piece_index is based on PIECE_TYPES_WITH_NONE.
-        piece_type = ps.PIECE_TYPES_WITH_NONE[piece_index] 
-        value += mc.IN_HAND_VALUES.get(piece_type)
+        piece_type = ps.PIECE_TYPES_WITH_NONE[piece_index]
+        if (mc.IN_HAND_VALUES.get(piece_type) != None): 
+            value += mc.IN_HAND_VALUES.get(piece_type)
 
     for piece_index in board.pieces_in_hand[ps.WHITE]:
-        piece_type = ps.PIECE_TYPES_WITH_NONE[piece_index] 
-        value -= mc.IN_HAND_VALUES.get(piece_type)
+        piece_type = ps.PIECE_TYPES_WITH_NONE[piece_index]
+        if (mc.IN_HAND_VALUES.get(piece_type) != None): 
+            value -= mc.IN_HAND_VALUES.get(piece_type)
     
     return round(value, sig_figs) # Rounds due to floating point errors
 

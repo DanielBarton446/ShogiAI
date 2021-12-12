@@ -166,10 +166,12 @@ class TestAgentAbility(unittest.TestCase):
     def setUp(self):
         self.board = ps.Board()
 
-    def test_random_versus_random(self):
-        agent1 = a.Agent(self.board.generate_legal_moves)
-        agent2 = a.Agent(self.board.generate_legal_moves)
-        gm.play_game(self.board, agent1, agent2)
+    # def test_random_versus_random(self):
+    #     agent1 = a.Agent(self.board.generate_legal_moves)
+    #     agent2 = a.Agent(self.board.generate_legal_moves)
+    #     gm.play_game(self.board, agent1, agent2)
+    
+
 
     # def test_random_versus_ab_standard(self):
         # agent1 = a.Agent(self.board.generate_legal_moves)
