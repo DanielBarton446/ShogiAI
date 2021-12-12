@@ -65,11 +65,19 @@ def count_material(board : ps.Board):
     return round(value, sig_figs) # Rounds due to floating point errors
 
 
-def evaluator(board : ps.Board):
+def evaluator(board : ps.Board, eval_flags):
+    # eval_dic = { "count_material" : 1, "count_mobility" : 1,
+    #              "checkmate_value" : 1, "king_safety" : 1}
+
     evaluation = 0
-    evaluation += count_material(board)
-    evaluation += count_mobility(board)
-    evaluation += checkmate_value(board)
-    radius = 1 # arbitrary radius
-    evaluation += ks.king_safety(board, radius)
+    if (eval_flags[0] == 1):
+        evaluation += count_material(board)
+    if (eval_flags[1] == 1):
+        evaluation += count_mobility(board)
+    if (eval_flags[2] == 1):
+        evaluation += checkmate_value(board)
+    if (eval_flags[3] == 1):
+        radius = 1 # arbitrary radius
+        evaluation += ks.king_safety(board, radius)
+
     return round(evaluation, sig_figs)
