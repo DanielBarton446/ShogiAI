@@ -17,6 +17,8 @@ testing will demonstrate which of these values yields the strongest AI. Approach
 - Defending Attacked Material Moves
 - More to do
 
+## Performance and Results
+Please read Final_Report.pdf within this repo to understand results and analysis. 
 
 ### Resources
 Here is a link to resources that may be of use
